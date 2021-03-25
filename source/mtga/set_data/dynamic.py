@@ -12,11 +12,19 @@ from mtga.models.card_set import Set
 
 
 def _get_data_location_hardcoded():
-    root = os.environ.get(
+    possible_paths = []
+    sys_var_root = os.environ.get(
         "ProgramFiles",
         r"C:\Program Files"
     )
-    return os.path.join(root, "Wizards of the Coast", "MTGA", "MTGA_Data", "Downloads", "Data")
+    possible_paths.append(os.path.join(root, "Wizards of the Coast", "MTGA", "MTGA_Data", "Downloads", "Data"))
+    possible_paths.append(os.path.join(r"C:\Program Files", "Epic Games", "MagicTheGathering", "MTGA_Data",
+                                       "Downloads", "Data"))
+    for possible_path in possible_paths:
+        if os.path.isdir(possible_path):
+            return possible_path
+    # Just return _something_ Eventually this should be revisted and more effective.
+    return possible_paths[0]
 
 
 COLOR_ID_MAP = {1: "W", 2: "U", 3: "B", 4: "R", 5: "G"}
@@ -146,10 +154,10 @@ for set_name in listed_cardsets:
                 token_count += 1
             else:
                 try:
-                    if card["CollectorNumber"].startswith("GR") or card["CollectorNumber"].startswith("GP"):
-                        set_number = int(card["CollectorNumber"][2]) * 1000
+                    if card["collectorNumber"].startswith("GR") or card["collectorNumber"].startswith("GP"):
+                        set_number = int(card["collectorNumber"][2]) * 1000
                     else:
-                        set_number = int(card["CollectorNumber"])
+                        set_number = int(card["collectorNumber"])
                 except ValueError:
                     set_number = card["grpid"]
 
@@ -177,7 +185,7 @@ for set_name in listed_cardsets:
 
         except Exception:
             print("hit an error on {} / {} / {}".format(card["grpid"], loc_map[card["titleId"]],
-                                                        card["CollectorNumber"]))
+                                                        card["collectorNumber"]))
             # raise
     card_set_obj = Set(set_name_class_cased, cards=set_card_objs)
     dynamic_set_tuples.append((card_set_obj, all_abilities))
