@@ -17,7 +17,7 @@ def _get_data_location_hardcoded():
         "ProgramFiles",
         r"C:\Program Files"
     )
-    possible_paths.append(os.path.join(root, "Wizards of the Coast", "MTGA", "MTGA_Data", "Downloads", "Data"))
+    possible_paths.append(os.path.join(sys_var_root, "Wizards of the Coast", "MTGA", "MTGA_Data", "Downloads", "Data"))
     possible_paths.append(os.path.join(r"C:\Program Files", "Epic Games", "MagicTheGathering", "MTGA_Data",
                                        "Downloads", "Data"))
     for possible_path in possible_paths:
